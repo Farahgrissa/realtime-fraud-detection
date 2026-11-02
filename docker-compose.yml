@@ -11,8 +11,8 @@ services:
       - '7077:7077'     # Spark master
       - '4040:4040'     # Spark application UI
     volumes:
-      - ./data:/data                # PaySim files visible in the container
-      - ./spark:/root/spark-jobs    # P2 scripts
+      - ./data:/data                    # PaySim visible dans le conteneur
+      - ./processing:/root/processing   # code Spark (P2)
     networks: [hadoop]
 
   hadoop-slave1:
@@ -33,7 +33,7 @@ services:
 
   mongo:
     image: mongo:4.4
-    container_name: mongo
+    container_name: fraud-mongo         # le nom de service "mongo" reste l'adresse réseau
     ports:
       - '27017:27017'
     volumes:

@@ -1,0 +1,47 @@
+services:
+  hadoop-master:
+    image: liliasfaxi/spark-hadoop:hv-2.7.2
+    container_name: fraud-hadoop-master
+    hostname: hadoop-master
+    tty: true
+    stdin_open: true
+    ports:
+      - '50070:50070'   # HDFS web UI
+      - '8088:8088'     # YARN web UI
+      - '7077:7077'     # Spark master
+      - '4040:4040'     # Spark application UI
+    volumes:
+      - ./data:/data                # PaySim files visible in the container
+      - ./spark:/root/spark-jobs    # P2 scripts
+    networks: [hadoop]
+
+  hadoop-slave1:
+    image: liliasfaxi/spark-hadoop:hv-2.7.2
+    container_name: fraud-hadoop-slave1
+    hostname: hadoop-slave1
+    tty: true
+    stdin_open: true
+    networks: [hadoop]
+
+  hadoop-slave2:
+    image: liliasfaxi/spark-hadoop:hv-2.7.2
+    container_name: fraud-hadoop-slave2
+    hostname: hadoop-slave2
+    tty: true
+    stdin_open: true
+    networks: [hadoop]
+
+  mongo:
+    image: mongo:4.4
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo:/data/db
+    networks: [hadoop]
+
+networks:
+  hadoop:
+
+volumes:
+  mongo:

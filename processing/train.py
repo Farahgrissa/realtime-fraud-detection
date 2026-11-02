@@ -24,6 +24,8 @@ def parse_args():
                    help="rf = Random Forest (sous-échantillonnage), lr = régression logistique (poids)")
     p.add_argument("--neg-ratio", type=float, default=10.0,
                    help="rf : nombre de transactions normales gardées par fraude à l'entraînement")
+    p.add_argument("--no-error-features", action="store_true",
+                   help="test : entraîner sans errorBalanceOrig ni errorBalanceDest")
     return p.parse_args()
 
 
@@ -64,7 +66,12 @@ def main():
     #    Tout est sauvegardé ensemble, donc le streaming applique exactement les mêmes étapes.
     indexer = StringIndexer(inputCol="type", outputCol="type_idx", handleInvalid="keep")
     encoder = OneHotEncoder(inputCol="type_idx", outputCol="type_vec")
-    assembler = VectorAssembler(inputCols=NUMERIC_FEATURES + ["type_vec"], outputCol="features")
+    features = NUMERIC_FEATURES
+    if args.no_error_features:
+        # Test d'ablation : mesurer ce que les écarts de solde apportent au modèle
+        features = [c for c in NUMERIC_FEATURES if not c.startswith("errorBalance")]
+    print("Variables : %s + type" % ", ".join(features))
+    assembler = VectorAssembler(inputCols=features + ["type_vec"], outputCol="features")
     if args.algo == "rf":
         clf = RandomForestClassifier(labelCol="isFraud", featuresCol="features",
                                      numTrees=50, maxDepth=8, seed=42)

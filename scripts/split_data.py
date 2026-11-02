@@ -10,7 +10,7 @@ def stratified_sample(df, frac, seed=42):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--source", default="data/paysim.csv")
+    p.add_argument("--source", default="C:\\Users\\HP\\Downloads\\realtime-fraud-detection-main\\realtime-fraud-detection-main\\realtime-fraud-detection\\data\\paysim.csv")
     p.add_argument("--stream-frac", type=float, default=0.2,
                    help="part de PaySim réservée au flux (jamais vue à l'entraînement)")
     p.add_argument("--train-rows", type=int, default=500000,

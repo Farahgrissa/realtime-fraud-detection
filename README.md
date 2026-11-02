@@ -69,7 +69,7 @@ bash scripts/load_hdfs.sh
 
 **6. Entraîner le modèle** (Git Bash, quelques minutes)
 ```bash
-bash scripts/train.sh
+bash scripts/train.sh --no-error-features --neg-ratio 50
 ```
 ✅ Affiche la matrice de confusion, `Precision | Recall | F1 | AUC-PR`, puis `Modèle sauvegardé dans hdfs:///models/fraud_model`.
 

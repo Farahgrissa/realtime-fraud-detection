@@ -1,4 +1,4 @@
-"""Génère un faux CSV au format PaySim, pour tester le code sans le vrai jeu de données."""
+"""Génère un faux CSV au format PaySim, pour tester le code sans le vrai jeu de données"""
 import csv, random, sys
 
 out, n = sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 50000
@@ -13,7 +13,7 @@ with open(out, "w", newline="") as f:
         fraud = random.random() < 0.01
         t = random.choice(["TRANSFER", "CASH_OUT"]) if fraud else random.choice(types)
         old = round(random.uniform(0, 200000), 2)
-        if fraud:   
+        if fraud:   # compte vidé, solde destinataire non mis à jour
             amount, new = old, 0.0
             od = round(random.uniform(0, 50000), 2); nd = od
         else:

@@ -63,6 +63,8 @@ docker cp data/paysim.csv hadoop-master:/root/paysim.csv
 
 # Spark doit utiliser Python 3 (sinon Python 2 par défaut et le code plante)
 echo 'export PYSPARK_PYTHON=python3' >> ~/.bashrc
+# Le conteneur n'a pas de locale : sans ça, Python 3.5 plante sur les accents des print
+echo 'export PYTHONIOENCODING=utf-8' >> ~/.bashrc
 source ~/.bashrc
 
 # Préparation des données
@@ -161,6 +163,18 @@ Base `fraud`, collection `transactions` :
   "processed_at": "2026-11-02T10:15:03" }
 ```
 
+## Problèmes rencontrés et solutions
+
+| Problème | Cause | Solution |
+|---|---|---|
+| `docker` inconnu dans le master | les commandes docker se tapent sous Windows | `exit`, puis PowerShell |
+| `pip3` inconnu | l'image ne contient pas pip | section 2 (apt-get ou wheel depuis Windows) |
+| Erreur de syntaxe ou d'encodage Python au lancement | Spark utilise Python 2 par défaut | `export PYSPARK_PYTHON=python3` |
+| `UnicodeEncodeError: 'ascii' codec can't encode character` | le conteneur n'a pas de locale (`LANG` vide), Python 3.5 écrit en ASCII | `export PYTHONIOENCODING=utf-8` |
+| `ImportError: No module named 'numpy'` | `pyspark.ml` a besoin de numpy, absent de l'image | `apt-get install -y python3-numpy` |
+| `foreachBatch` introuvable | n'existe qu'à partir de Spark 2.4 | streaming réécrit en DStreams (`textFileStream` + `foreachRDD`) |
+| Random Forest sans `weightCol` | non supporté en Spark 2.2 | sous-échantillonnage des normales (`--neg-ratio`) |
+| Un fichier déposé n'est pas traité | Spark ignore les fichiers déjà présents au démarrage ou copiés lentement | écrire ailleurs puis `hdfs dfs -mv` vers `/stream/in`, avec un nom nouveau |
 
 ## Choix techniques
 

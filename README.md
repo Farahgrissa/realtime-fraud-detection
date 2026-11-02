@@ -7,7 +7,7 @@ Les résultats sont stockés dans MongoDB et affichés en direct sur un tableau 
 |---|---|---|
 | P1 — Infrastructure et collecte | Ghaith Sayari | `docker-compose.yml`, `scripts/`, `simulator/` |
 | P2 — Traitement Spark | Farah Grissa | `processing/`, `scripts/` |
-| P3 — NoSQL et visualisation | Sahar Elloumi | `dashboard/`,`scripts/` |
+| P3 — NoSQL et visualisation | Sahar Elloumi | `dashboard/`,`tools/` |
 
 ---
 
